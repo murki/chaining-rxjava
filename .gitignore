@@ -15,6 +15,7 @@ gen/
 # Gradle files
 .gradle/
 build/
+/*/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -30,3 +31,13 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+# IntelliJ IDEA - ignore everything except code configs
+.idea/*
+!.idea/inspectionProfiles/profiles_settings.xml
+!.idea/codeStyleSettings.xml
+*.ipr
+*.iws
+*.iml
+classes
+gen-external-apklibs
