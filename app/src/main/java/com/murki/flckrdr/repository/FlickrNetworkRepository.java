@@ -13,7 +13,7 @@ public class FlickrNetworkRepository {
 
     private static final String CLASSNAME = FlickrNetworkRepository.class.getCanonicalName();
     private static final String ENDPOINT = "https://api.flickr.com/services/rest/";
-    private static final String API_KEY = "";
+    private static final String API_KEY = "4f721bbafa75bf6d2cb5af54f937bb70";
     private static IFlickrAPI flickrAPI;
 
     public FlickrNetworkRepository() {

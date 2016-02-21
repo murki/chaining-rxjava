@@ -29,6 +29,7 @@ import rx.schedulers.Timestamped;
 public class FlickrListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, ITimestampedView {
 
     private static final String CLASSNAME = FlickrListFragment.class.getCanonicalName();
+    private FlickrDomainService flickrDomainService;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FlickrListAdapter flickrListAdapter;
@@ -60,23 +61,22 @@ public class FlickrListFragment extends Fragment implements SwipeRefreshLayout.O
         super.onActivityCreated(savedInstanceState);
         Log.d(CLASSNAME, "onActivityCreated()");
 
-        fetchFlickrItems(); // TODO: Could we fetch earlier?
+        flickrDomainService = new FlickrDomainService(getContext()); // TODO: Inject Singleton
+        fetchFlickrItems();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d(CLASSNAME, "onDestroy()");
+
         unsubscribe();
-        if (getActivity().isFinishing()) {
-            ObservableSingletonManager.INSTANCE.removeObservable(ObservableSingletonManager.FLICKR_GET_RECENT_PHOTOS);
-        }
     }
 
     @Override
     public void onRefresh() {
         Log.d(CLASSNAME, "onRefresh()");
-        ObservableSingletonManager.INSTANCE.removeObservable(ObservableSingletonManager.FLICKR_GET_RECENT_PHOTOS);
+
         fetchFlickrItems();
     }
 
@@ -98,23 +98,11 @@ public class FlickrListFragment extends Fragment implements SwipeRefreshLayout.O
     private void fetchFlickrItems() {
         isRefreshing(true);
         unsubscribe();
-        Observable<Timestamped<List<FlickrCardVM>>> recentPhotosObservable = obtainUsableObservable();
+        Observable<Timestamped<List<FlickrCardVM>>> recentPhotosObservable = flickrDomainService
+                .getRecentPhotos(this)
+                .observeOn(AndroidSchedulers.mainThread());
+
         flickrListSubscription = recentPhotosObservable.subscribe(flickrRecentPhotosOnNext, flickrRecentPhotosOnError, flickrRecenPhotosOnComplete);
-    }
-
-    @RxLogObservable
-    private Observable<Timestamped<List<FlickrCardVM>>> obtainUsableObservable() {
-        Observable<Timestamped<List<FlickrCardVM>>> recentPhotosObservable = ObservableSingletonManager.INSTANCE.getObservable(ObservableSingletonManager.FLICKR_GET_RECENT_PHOTOS);
-        if (recentPhotosObservable == null) {
-            FlickrDomainService flickrDomainService = new FlickrDomainService(getContext());
-            recentPhotosObservable = flickrDomainService
-                    .getRecentPhotos(this)
-                    .cache()
-                    .observeOn(AndroidSchedulers.mainThread());
-
-            ObservableSingletonManager.INSTANCE.putObservable(ObservableSingletonManager.FLICKR_GET_RECENT_PHOTOS, recentPhotosObservable);
-        }
-        return recentPhotosObservable;
     }
 
     private void isRefreshing(final boolean isRefreshing) {
@@ -140,7 +128,6 @@ public class FlickrListFragment extends Fragment implements SwipeRefreshLayout.O
         public void call(Throwable throwable) {
             Log.e(CLASSNAME, "flickrRecentPhotosOnError.call() - ERROR", throwable);
             isRefreshing(false);
-            ObservableSingletonManager.INSTANCE.removeObservable(ObservableSingletonManager.FLICKR_GET_RECENT_PHOTOS);
             Toast.makeText(getActivity(), "OnError=" + throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
