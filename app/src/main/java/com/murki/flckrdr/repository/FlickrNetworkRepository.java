@@ -9,14 +9,14 @@ import retrofit.RxJavaCallAdapterFactory;
 import retrofit.http.GET;
 import rx.Observable;
 
-public class FlickrApiRepository {
+public class FlickrNetworkRepository {
 
-    private static final String CLASSNAME = FlickrApiRepository.class.getCanonicalName();
+    private static final String CLASSNAME = FlickrNetworkRepository.class.getCanonicalName();
     private static final String ENDPOINT = "https://api.flickr.com/services/rest/";
     private static final String API_KEY = "";
     private static IFlickrAPI flickrAPI;
 
-    public FlickrApiRepository() {
+    public FlickrNetworkRepository() {
         if (flickrAPI == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(ENDPOINT)

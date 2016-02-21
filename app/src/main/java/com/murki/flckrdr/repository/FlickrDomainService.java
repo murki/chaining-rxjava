@@ -21,11 +21,11 @@ public class FlickrDomainService {
 
     private static final String CLASSNAME = FlickrDomainService.class.getCanonicalName();
 
-    private final FlickrApiRepository flickrApiRepository;
+    private final FlickrNetworkRepository flickrNetworkRepository;
     private final FlickrDiskRepository flickrDiskRepository;
 
     public FlickrDomainService(Context context) {
-        flickrApiRepository = new FlickrApiRepository(); // TODO: Make Injectable Singleton
+        flickrNetworkRepository = new FlickrNetworkRepository(); // TODO: Make Injectable Singleton
         flickrDiskRepository = new FlickrDiskRepository(context); // TODO: Make Injectable Singleton
     }
 
@@ -40,7 +40,7 @@ public class FlickrDomainService {
     private Observable<Timestamped<RecentPhotosResponse>> getMergedPhotos() {
         return Observable.merge(
                 flickrDiskRepository.getRecentPhotos().subscribeOn(Schedulers.io()),
-                flickrApiRepository.getRecentPhotos().timestamp().doOnNext(new Action1<Timestamped<RecentPhotosResponse>>() {
+                flickrNetworkRepository.getRecentPhotos().timestamp().doOnNext(new Action1<Timestamped<RecentPhotosResponse>>() {
                     @Override
                     public void call(Timestamped<RecentPhotosResponse> recentPhotosResponse) {
                         Log.d(CLASSNAME, "Frodo (!) => flickrApiRepository.getRecentPhotos().doOnNext() - Saving photos to disk - thread=" + Thread.currentThread().getName());
