@@ -3,6 +3,7 @@ package com.murki.flckrdr.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.murki.flckrdr.model.RecentPhotosResponse;
@@ -18,7 +19,8 @@ import rx.schedulers.Timestamped;
 
 public class FlickrDiskRepository {
 
-    private final static String RECENT_PHOTOS_RESPONSE_KEY = "com.murki.flckrdr.model.RecentPhotosResponse_key";
+    private static final String CLASSNAME = FlickrDiskRepository.class.getCanonicalName();
+    private final static String RECENT_PHOTOS_RESPONSE_KEY = CLASSNAME + ".RecentPhotosResponseKey";
 
     private final SharedPreferences sharedPreferences;
     private final JsonAdapter<Timestamped<RecentPhotosResponse>> flickrPhotosJsonAdapter;
@@ -42,7 +44,10 @@ public class FlickrDiskRepository {
             public void call(Subscriber<? super Timestamped<RecentPhotosResponse>> subscriber) {
                 try {
                     String serializedPhotoList = sharedPreferences.getString(RECENT_PHOTOS_RESPONSE_KEY, "");
-                    Timestamped<RecentPhotosResponse> photos = flickrPhotosJsonAdapter.fromJson(serializedPhotoList);
+                    Timestamped<RecentPhotosResponse> photos = null;
+                    if (!TextUtils.isEmpty(serializedPhotoList)) {
+                        photos = flickrPhotosJsonAdapter.fromJson(serializedPhotoList);
+                    }
                     subscriber.onNext(photos);
                     subscriber.onCompleted();
                 } catch (Exception ex) {

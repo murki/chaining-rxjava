@@ -39,12 +39,7 @@ public class FlickrDomainService {
     @RxLogObservable
     private Observable<Timestamped<RecentPhotosResponse>> getMergedPhotos() {
         return Observable.merge(
-                flickrDiskRepository.getRecentPhotos().onErrorReturn(new Func1<Throwable, Timestamped<RecentPhotosResponse>>() {
-                    @Override
-                    public Timestamped<RecentPhotosResponse> call(Throwable throwable) {
-                        return null;
-                    }
-                }).subscribeOn(Schedulers.io()),
+                flickrDiskRepository.getRecentPhotos().subscribeOn(Schedulers.io()),
                 flickrNetworkRepository.getRecentPhotos().timestamp().doOnNext(new Action1<Timestamped<RecentPhotosResponse>>() {
                     @Override
                     public void call(Timestamped<RecentPhotosResponse> recentPhotosResponse) {
