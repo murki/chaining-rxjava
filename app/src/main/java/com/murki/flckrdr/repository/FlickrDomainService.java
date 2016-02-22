@@ -43,7 +43,7 @@ public class FlickrDomainService {
                 flickrNetworkRepository.getRecentPhotos().timestamp().doOnNext(new Action1<Timestamped<RecentPhotosResponse>>() {
                     @Override
                     public void call(Timestamped<RecentPhotosResponse> recentPhotosResponse) {
-                        Log.d(CLASSNAME, "Frodo (!) => flickrApiRepository.getRecentPhotos().doOnNext() - Saving photos to disk - thread=" + Thread.currentThread().getName());
+                        Log.d(CLASSNAME, "flickrApiRepository.getRecentPhotos().doOnNext() - Saving photos to disk - thread=" + Thread.currentThread().getName());
                         flickrDiskRepository.savePhotos(recentPhotosResponse);
                     }
                 }).subscribeOn(Schedulers.io())
@@ -55,7 +55,7 @@ public class FlickrDomainService {
             @Override
             public Boolean call(Timestamped<RecentPhotosResponse> recentPhotosResponseTimestamped) {
 
-                StringBuilder logMessage = new StringBuilder("Frodo (!) => getMergedPhotos() - Filtering results");
+                StringBuilder logMessage = new StringBuilder("getMergedPhotos().filter() - Filtering results");
                 if (recentPhotosResponseTimestamped == null) {
                     logMessage.append(", recentPhotosResponseTimestamped is null");
                 } else {
@@ -69,6 +69,7 @@ public class FlickrDomainService {
                 // if timestamp of new arrived (emission) data is less than timestamp of already displayed data — ignore it.
                 return recentPhotosResponseTimestamped != null
                         && recentPhotosResponseTimestamped.getValue() != null
+                        && recentPhotosResponseTimestamped.getValue().photos != null
                         && recentPhotosResponseTimestamped.getTimestampMillis() > timestampedView.getViewDataTimestampMillis();
             }
         };
