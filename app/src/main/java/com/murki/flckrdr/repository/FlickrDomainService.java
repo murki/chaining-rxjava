@@ -6,7 +6,7 @@ import android.util.Log;
 import com.fernandocejas.frodo.annotation.RxLogObservable;
 import com.murki.flckrdr.ITimestampedView;
 import com.murki.flckrdr.model.RecentPhotosResponse;
-import com.murki.flckrdr.viewmodel.FlickrApiToVmMapping;
+import com.murki.flckrdr.viewmodel.FlickrModelToVmMapping;
 import com.murki.flckrdr.viewmodel.FlickrCardVM;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class FlickrDomainService {
     public Observable<Timestamped<List<FlickrCardVM>>> getRecentPhotos(ITimestampedView timestampedView) {
         return getMergedPhotos()
                 .filter(getRecentPhotosFilter(timestampedView))
-                .map(FlickrApiToVmMapping.instance());
+                .map(FlickrModelToVmMapping.instance());
     }
 
     @RxLogObservable
