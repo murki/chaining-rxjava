@@ -48,10 +48,14 @@ public class FlickrDiskRepository {
                     if (!TextUtils.isEmpty(serializedPhotoList)) {
                         photos = flickrPhotosJsonAdapter.fromJson(serializedPhotoList);
                     }
-                    subscriber.onNext(photos);
-                    subscriber.onCompleted();
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onNext(photos);
+                        subscriber.onCompleted();
+                    }
                 } catch (Exception ex) {
-                    subscriber.onError(ex);
+                    if (!subscriber.isUnsubscribed()) {
+                        subscriber.onError(ex);
+                    }
                 }
             }
         });
