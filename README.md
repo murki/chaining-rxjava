@@ -1,4 +1,4 @@
-# chaining-rxjava
+# Chaining multiple sources with RxJava
 Companion piece to blog post: https://medium.com/@murki/chaining-multiple-sources-with-rxjava-20eb6850e5d9
 
 ### Pre-requisites:
