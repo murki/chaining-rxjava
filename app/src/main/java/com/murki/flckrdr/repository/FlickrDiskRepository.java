@@ -12,9 +12,9 @@ import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 
 import java.lang.reflect.Type;
+import java.util.concurrent.Callable;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.schedulers.Timestamped;
 
 public class FlickrDiskRepository {
@@ -39,24 +39,15 @@ public class FlickrDiskRepository {
 
     @RxLogObservable
     public Observable<Timestamped<RecentPhotosResponse>> getRecentPhotos() {
-        return Observable.create(new Observable.OnSubscribe<Timestamped<RecentPhotosResponse>>() {
+        return Observable.fromCallable(new Callable<Timestamped<RecentPhotosResponse>>() {
             @Override
-            public void call(Subscriber<? super Timestamped<RecentPhotosResponse>> subscriber) {
-                try {
-                    String serializedPhotoList = sharedPreferences.getString(RECENT_PHOTOS_RESPONSE_KEY, "");
-                    Timestamped<RecentPhotosResponse> photos = null;
-                    if (!TextUtils.isEmpty(serializedPhotoList)) {
-                        photos = flickrPhotosJsonAdapter.fromJson(serializedPhotoList);
-                    }
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onNext(photos);
-                        subscriber.onCompleted();
-                    }
-                } catch (Exception ex) {
-                    if (!subscriber.isUnsubscribed()) {
-                        subscriber.onError(ex);
-                    }
+            public Timestamped<RecentPhotosResponse> call() throws Exception {
+                String serializedPhotoList = sharedPreferences.getString(RECENT_PHOTOS_RESPONSE_KEY, "");
+                Timestamped<RecentPhotosResponse> photos = null;
+                if (!TextUtils.isEmpty(serializedPhotoList)) {
+                    photos = flickrPhotosJsonAdapter.fromJson(serializedPhotoList);
                 }
+                return photos;
             }
         });
     }
