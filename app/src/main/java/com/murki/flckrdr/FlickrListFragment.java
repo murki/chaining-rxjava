@@ -100,7 +100,7 @@ public class FlickrListFragment extends Fragment implements SwipeRefreshLayout.O
         unsubscribe();
         Observable<Timestamped<List<FlickrCardVM>>> recentPhotosObservable = flickrDomainService
                 .getRecentPhotos(this)
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread(), true); // delayError = true
 
         flickrListSubscription = recentPhotosObservable.subscribe(flickrRecentPhotosOnNext, flickrRecentPhotosOnError, flickrRecenPhotosOnComplete);
     }

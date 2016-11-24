@@ -42,6 +42,7 @@ public class FlickrDiskRepository {
         return Observable.fromCallable(new Callable<Timestamped<RecentPhotosResponse>>() {
             @Override
             public Timestamped<RecentPhotosResponse> call() throws Exception {
+//                if (true) throw new RuntimeException("DISK.getRecentPhotos() fake Exception!");
                 String serializedPhotoList = sharedPreferences.getString(RECENT_PHOTOS_RESPONSE_KEY, "");
                 Timestamped<RecentPhotosResponse> photos = null;
                 if (!TextUtils.isEmpty(serializedPhotoList)) {

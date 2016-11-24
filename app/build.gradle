@@ -18,8 +18,10 @@ android {
         applicationId "com.murki.flckrdr"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
+        buildConfigField "String", "FLICKR_API_KEY", project.getProperties().get("FLICKR_API_KEY")
+
     }
     dataBinding {
         enabled = true
@@ -43,6 +45,6 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-moshi:2.0.0-beta2'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
-    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.0.1'
 }

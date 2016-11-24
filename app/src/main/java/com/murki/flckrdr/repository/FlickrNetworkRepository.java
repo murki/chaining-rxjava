@@ -1,6 +1,7 @@
 package com.murki.flckrdr.repository;
 
 import com.fernandocejas.frodo.annotation.RxLogObservable;
+import com.murki.flckrdr.BuildConfig;
 import com.murki.flckrdr.model.RecentPhotosResponse;
 
 import retrofit.MoshiConverterFactory;
@@ -13,7 +14,6 @@ public class FlickrNetworkRepository {
 
     private static final String CLASSNAME = FlickrNetworkRepository.class.getCanonicalName();
     private static final String ENDPOINT = "https://api.flickr.com/services/rest/";
-    private static final String API_KEY = "";
     private static IFlickrAPI flickrAPI;
 
     public FlickrNetworkRepository() {
@@ -30,11 +30,12 @@ public class FlickrNetworkRepository {
 
     @RxLogObservable
     public Observable<RecentPhotosResponse> getRecentPhotos() {
+//        if (true) return Observable.error(new RuntimeException("NETWORK.getRecentPhotos() fake Exception!"));
         return flickrAPI.getRecentPhotos();
     }
 
     private interface IFlickrAPI {
-        @GET("?method=flickr.photos.getRecent&format=json&nojsoncallback=1&extras=url_n&api_key=" + API_KEY)
+        @GET("?method=flickr.photos.getRecent&format=json&nojsoncallback=1&extras=url_n&api_key=" + BuildConfig.FLICKR_API_KEY)
         Observable<RecentPhotosResponse> getRecentPhotos();
     }
 }

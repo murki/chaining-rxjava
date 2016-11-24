@@ -32,20 +32,13 @@ public class FlickrDomainService {
     @RxLogObservable
     public Observable<Timestamped<List<FlickrCardVM>>> getRecentPhotos(ITimestampedView timestampedView) {
         return getMergedPhotos()
-                .onErrorReturn(new Func1<Throwable, Timestamped<RecentPhotosResponse>>() {
-                    @Override
-                    public Timestamped<RecentPhotosResponse> call(Throwable throwable) {
-                        Log.e(CLASSNAME, "Error while fetching data. Swallowing the exception.", throwable);
-                        return null; // We return null since we know our filter will ignore null values.
-                    }
-                })
                 .filter(getRecentPhotosFilter(timestampedView))
                 .map(FlickrModelToVmMapping.instance());
     }
 
     @RxLogObservable
     private Observable<Timestamped<RecentPhotosResponse>> getMergedPhotos() {
-        return Observable.merge(
+        return Observable.mergeDelayError(
                 flickrDiskRepository.getRecentPhotos().subscribeOn(Schedulers.io()),
                 flickrNetworkRepository.getRecentPhotos().timestamp().doOnNext(new Action1<Timestamped<RecentPhotosResponse>>() {
                     @Override
