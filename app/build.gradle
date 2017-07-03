@@ -20,7 +20,7 @@ android {
         targetSdkVersion 23
         versionCode 2
         versionName "1.1"
-        buildConfigField "String", "FLICKR_API_KEY", project.getProperties().get("FLICKR_API_KEY")
+        buildConfigField("String", "FLICKR_API_KEY", FLICKR_API_KEY)
 
     }
     dataBinding {
