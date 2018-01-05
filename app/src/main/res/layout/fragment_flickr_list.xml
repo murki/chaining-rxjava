@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/flickr_swipe_refresh"
         android:layout_width="match_parent"
@@ -10,6 +11,7 @@
             android:id="@+id/my_recycler_view"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/flickr_card"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

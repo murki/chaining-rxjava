@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -30,22 +31,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:scaleType="centerCrop"
+                    android:background="@mipmap/ic_launcher"
                     card_view:imageUrl="@{viewModel.ImageUrl}" />
 
                 <TextView
                     android:id="@+id/info_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/flickrPhoto"
+                    android:layout_alignStart="@id/flickrPhoto"
                     android:layout_alignTop="@id/flickrPhoto"
-                    android:layout_alignRight="@id/flickrPhoto"
+                    android:layout_alignEnd="@id/flickrPhoto"
                     android:layout_alignBottom="@id/flickrPhoto"
                     android:padding="3dp"
                     android:gravity="bottom"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:background="@drawable/gradient_shape"
-                    android:text="@{viewModel.Title}"/>
+                    android:text="@{viewModel.Title}"
+                    tools:text="This is the title of the picture"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
